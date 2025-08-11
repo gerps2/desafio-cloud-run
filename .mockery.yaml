@@ -1,0 +1,27 @@
+with-expecter: true
+dir: "{{.InterfaceDir}}/mocks"
+mockname: "Mock{{.InterfaceName}}"
+outpkg: mocks
+filename: "{{.MockName}}.go"
+structname: "{{.MockName}}"
+packages:
+  github.com/gerps2/desafio-cloud-run/shared/logger:
+    interfaces:
+      Logger:
+        config:
+          dir: "shared/logger/mocks"
+  github.com/gerps2/desafio-cloud-run/shared/repositories/external_apis/viapcep:
+    interfaces:
+      ViaCepRepositoryInterface:
+        config:
+          dir: "shared/repositories/external_apis/viapcep/mocks"
+  github.com/gerps2/desafio-cloud-run/shared/repositories/external_apis/weather:
+    interfaces:
+      WeatherRepositoryInterface:
+        config:
+          dir: "shared/repositories/external_apis/weather/mocks"
+  github.com/gerps2/desafio-cloud-run/features/weather/getWeatherByCep:
+    interfaces:
+      GetWeatherByCepUseCaseInterface:
+        config:
+          dir: "features/weather/getWeatherByCep/mocks"

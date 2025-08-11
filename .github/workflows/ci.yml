@@ -1,0 +1,294 @@
+name: CI/CD Pipeline
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [ main ]
+
+env:
+  GO_VERSION: '1.22'
+  COVERAGE_THRESHOLD: 80
+
+jobs:
+  # Code quality and validation
+  code-quality:
+    name: Code Quality & Validation
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: ${{ env.GO_VERSION }}
+
+    - name: Cache Go modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+
+    - name: Download dependencies
+      run: go mod download
+
+    - name: Verify dependencies
+      run: go mod verify
+
+    - name: Install Wire
+      run: go install github.com/google/wire/cmd/wire@latest
+
+    - name: Install Mockery
+      run: go install github.com/vektra/mockery/v2@latest
+
+    - name: Generate Wire code
+      run: wire ./cmd/api
+
+    - name: Generate mocks
+      run: mockery --all
+
+    - name: Run go vet
+      run: go vet ./...
+
+    - name: Run go fmt check
+      run: |
+        if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then
+          echo "The following files are not formatted:"
+          gofmt -s -l .
+          exit 1
+        fi
+
+    - name: Install staticcheck
+      run: go install honnef.co/go/tools/cmd/staticcheck@latest
+
+    - name: Run staticcheck
+      run: staticcheck ./...
+
+    - name: Install golangci-lint
+      run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.54.2
+
+    - name: Run golangci-lint
+      run: golangci-lint run
+
+  # Unit tests with coverage
+  test:
+    name: Unit Tests & Coverage
+    runs-on: ubuntu-latest
+    needs: code-quality
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: ${{ env.GO_VERSION }}
+
+    - name: Cache Go modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+
+    - name: Download dependencies
+      run: go mod download
+
+    - name: Install Wire
+      run: go install github.com/google/wire/cmd/wire@latest
+
+    - name: Install Mockery
+      run: go install github.com/vektra/mockery/v2@latest
+
+    - name: Generate Wire code
+      run: wire ./cmd/api
+
+    - name: Generate mocks
+      run: mockery --all
+
+    - name: Run unit tests with coverage
+      run: |
+        go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
+
+    - name: Check coverage threshold
+      run: |
+        COVERAGE=$(go tool cover -func=coverage.out | grep total | awk '{print substr($3, 1, length($3)-1)}')
+        echo "Current coverage: ${COVERAGE}%"
+        echo "Required coverage: ${COVERAGE_THRESHOLD}%"
+        
+        if (( $(echo "${COVERAGE} < ${COVERAGE_THRESHOLD}" | bc -l) )); then
+          echo "❌ Coverage ${COVERAGE}% is below threshold ${COVERAGE_THRESHOLD}%"
+          exit 1
+        else
+          echo "✅ Coverage ${COVERAGE}% meets threshold ${COVERAGE_THRESHOLD}%"
+        fi
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.out
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+    - name: Generate coverage report
+      run: go tool cover -html=coverage.out -o coverage.html
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: coverage.html
+
+  # Build validation
+  build:
+    name: Build Validation
+    runs-on: ubuntu-latest
+    needs: [code-quality, test]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: ${{ env.GO_VERSION }}
+
+    - name: Cache Go modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+
+    - name: Download dependencies
+      run: go mod download
+
+    - name: Install Wire
+      run: go install github.com/google/wire/cmd/wire@latest
+
+    - name: Generate Wire code
+      run: wire ./cmd/api
+
+    - name: Build application
+      run: go build -v -o bin/api ./cmd/api
+
+    - name: Test binary execution
+      run: |
+        timeout 10s ./bin/api || code=$?
+        if [[ $code -ne 124 && $code -ne 0 ]]; then
+          echo "❌ Binary failed to start"
+          exit 1
+        fi
+        echo "✅ Binary starts successfully"
+
+  # Docker build validation
+  docker-build:
+    name: Docker Build Validation
+    runs-on: ubuntu-latest
+    needs: [code-quality, test]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        push: false
+        tags: weather-api:test
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Test Docker image
+      run: |
+        # Start container in background
+        docker run -d --name test-container -p 8080:8080 \
+          -e WEATHER_API_KEY=test-key \
+          weather-api:test
+        
+        # Wait for container to start
+        sleep 10
+        
+        # Test health endpoint
+        if curl -f http://localhost:8080/health; then
+          echo "✅ Docker container health check passed"
+        else
+          echo "❌ Docker container health check failed"
+          docker logs test-container
+          exit 1
+        fi
+        
+        # Cleanup
+        docker stop test-container
+        docker rm test-container
+
+  # Security scanning
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: code-quality
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run Gosec Security Scanner
+      uses: securecodewarrior/github-action-gosec@master
+      with:
+        args: './...'
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  # Summary job
+  ci-success:
+    name: CI Pipeline Success
+    runs-on: ubuntu-latest
+    needs: [code-quality, test, build, docker-build, security]
+    if: always()
+    steps:
+    - name: Check all jobs status
+      run: |
+        if [[ "${{ needs.code-quality.result }}" == "success" && 
+              "${{ needs.test.result }}" == "success" && 
+              "${{ needs.build.result }}" == "success" && 
+              "${{ needs.docker-build.result }}" == "success" && 
+              "${{ needs.security.result }}" == "success" ]]; then
+          echo "✅ All CI checks passed successfully!"
+          echo "🚀 Ready for merge to main branch"
+        else
+          echo "❌ Some CI checks failed:"
+          echo "Code Quality: ${{ needs.code-quality.result }}"
+          echo "Tests: ${{ needs.test.result }}"
+          echo "Build: ${{ needs.build.result }}"
+          echo "Docker Build: ${{ needs.docker-build.result }}"
+          echo "Security: ${{ needs.security.result }}"
+          exit 1
+        fi

@@ -1,0 +1,62 @@
+# Git
+.git
+.gitignore
+.github
+
+# Documentation
+README.md
+*.md
+
+# Development files
+.env.example
+.env.local
+.env.development
+.env.test
+
+# IDE files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+bin/
+tmp/
+dist/
+build/
+
+# Test files
+*_test.go
+test/
+coverage.out
+coverage.html
+*.test
+
+# Docker files
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# CI/CD
+.github/
+
+# Air (hot reload)
+.air.toml
+tmp/
+
+# Logs
+*.log
+
+# Dependencies (will be downloaded in container)
+vendor/
+
+# Mockery generated files (will be generated in container)
+mocks/
+
+# Wire generated files (will be generated in container)
+wire_gen.go

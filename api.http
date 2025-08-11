@@ -1,0 +1,8 @@
+
+### Health Check
+GET http://localhost:5001/health
+Content-Type: application/json
+
+### Weather
+GET http://localhost:5001/api/v1/weather/18074-756
+Content-Type: application/json

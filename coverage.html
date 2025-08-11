@@ -1,0 +1,1761 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>api: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/gerps2/desafio-cloud-run/cmd/api/main.go (0.0%)</option>
+				
+				<option value="file1">github.com/gerps2/desafio-cloud-run/cmd/api/wire_gen.go (0.0%)</option>
+				
+				<option value="file2">github.com/gerps2/desafio-cloud-run/features/weather/getWeatherByCep/get_weather_by_cep_errors.go (50.0%)</option>
+				
+				<option value="file3">github.com/gerps2/desafio-cloud-run/features/weather/getWeatherByCep/get_weather_by_cep_usecase.go (100.0%)</option>
+				
+				<option value="file4">github.com/gerps2/desafio-cloud-run/features/weather/getWeatherByCep/mocks/MockGetWeatherByCepUseCase.go (0.0%)</option>
+				
+				<option value="file5">github.com/gerps2/desafio-cloud-run/features/weather/getWeatherByCep/mocks/MockGetWeatherByCepUseCaseInterface.go (0.0%)</option>
+				
+				<option value="file6">github.com/gerps2/desafio-cloud-run/features/weather/weather_controller.go (78.3%)</option>
+				
+				<option value="file7">github.com/gerps2/desafio-cloud-run/features/weather/weather_providers.go (0.0%)</option>
+				
+				<option value="file8">github.com/gerps2/desafio-cloud-run/shared/config/config.go (0.0%)</option>
+				
+				<option value="file9">github.com/gerps2/desafio-cloud-run/shared/domain/valueObjects/cep.go (100.0%)</option>
+				
+				<option value="file10">github.com/gerps2/desafio-cloud-run/shared/errors/api_error.go (0.0%)</option>
+				
+				<option value="file11">github.com/gerps2/desafio-cloud-run/shared/http/error_response.go (0.0%)</option>
+				
+				<option value="file12">github.com/gerps2/desafio-cloud-run/shared/http/server.go (0.0%)</option>
+				
+				<option value="file13">github.com/gerps2/desafio-cloud-run/shared/logger/logger.go (0.0%)</option>
+				
+				<option value="file14">github.com/gerps2/desafio-cloud-run/shared/logger/mocks/MockLogger.go (0.0%)</option>
+				
+				<option value="file15">github.com/gerps2/desafio-cloud-run/shared/providers/external_apis_providers.go (0.0%)</option>
+				
+				<option value="file16">github.com/gerps2/desafio-cloud-run/shared/repositories/external_apis/viapcep/mocks/MockViaCepRepositoryInterface.go (0.0%)</option>
+				
+				<option value="file17">github.com/gerps2/desafio-cloud-run/shared/repositories/external_apis/viapcep/viacep_client.go (0.0%)</option>
+				
+				<option value="file18">github.com/gerps2/desafio-cloud-run/shared/repositories/external_apis/viapcep/viacep_repository.go (0.0%)</option>
+				
+				<option value="file19">github.com/gerps2/desafio-cloud-run/shared/repositories/external_apis/weather/mocks/MockWeatherRepositoryInterface.go (0.0%)</option>
+				
+				<option value="file20">github.com/gerps2/desafio-cloud-run/shared/repositories/external_apis/weather/weather_client.go (0.0%)</option>
+				
+				<option value="file21">github.com/gerps2/desafio-cloud-run/shared/repositories/external_apis/weather/weather_repository.go (0.0%)</option>
+				
+				<option value="file22">github.com/gerps2/desafio-cloud-run/test/test_helper.go (0.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package main
+
+import (
+        "context"
+        "log"
+        "net/http"
+        "os"
+        "os/signal"
+        "syscall"
+        "time"
+
+        "github.com/gerps2/desafio-cloud-run/features/weather"
+        httpServer "github.com/gerps2/desafio-cloud-run/shared/http"
+        "github.com/gerps2/desafio-cloud-run/shared/logger"
+
+        "github.com/gin-gonic/gin"
+)
+
+type App struct {
+        server            *httpServer.Server
+        weatherController *weather.WeatherController
+        logger            logger.Logger
+}
+
+func NewApp(
+        server *httpServer.Server,
+        weatherController *weather.WeatherController,
+        logger logger.Logger,
+) *App <span class="cov0" title="0">{
+        return &amp;App{
+                server:            server,
+                weatherController: weatherController,
+                logger:            logger,
+        }
+}</span>
+
+func (a *App) setupRoutes() <span class="cov0" title="0">{
+        router := a.server.GetRouter()
+
+        // Health check route
+        router.GET("/health", func(c *gin.Context) </span><span class="cov0" title="0">{
+                c.JSON(http.StatusOK, gin.H{"status": "healthy"})
+        }</span>)
+
+        // Register weather routes
+        <span class="cov0" title="0">a.weatherController.RegisterRoutes(router)</span>
+}
+
+func (a *App) Run() error <span class="cov0" title="0">{
+        a.setupRoutes()
+
+        // Start server in a goroutine
+        go func() </span><span class="cov0" title="0">{
+                if err := a.server.Start(); err != nil </span><span class="cov0" title="0">{
+                        a.logger.Error("Server failed to start: %v", err)
+                }</span>
+        }()
+
+        // Wait for interrupt signal to gracefully shutdown the server
+        <span class="cov0" title="0">quit := make(chan os.Signal, 1)
+        signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+        &lt;-quit
+
+        a.logger.Info("Shutting down server...")
+
+        // Give outstanding requests a deadline for completion
+        ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+        defer cancel()
+
+        return a.server.Shutdown(ctx)</span>
+}
+
+func main() <span class="cov0" title="0">{
+        app, err := InitializeApp()
+        if err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("Failed to initialize app: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">if err := app.Run(); err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("Failed to run app: %v", err)
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">// Code generated by Wire. DO NOT EDIT.
+
+//go:generate go run -mod=mod github.com/google/wire/cmd/wire
+//go:build !wireinject
+// +build !wireinject
+
+package main
+
+import (
+        "github.com/gerps2/desafio-cloud-run/features/weather"
+        "github.com/gerps2/desafio-cloud-run/shared/config"
+        "github.com/gerps2/desafio-cloud-run/shared/http"
+        "github.com/gerps2/desafio-cloud-run/shared/logger"
+        "github.com/gerps2/desafio-cloud-run/shared/providers"
+)
+
+// Injectors from wire.go:
+
+func InitializeApp() (*App, error) <span class="cov0" title="0">{
+        configConfig := config.Load()
+        loggerLogger := logger.New()
+        server := http.NewServer(configConfig, loggerLogger)
+        viaCepClient := providers.ProvideViaCepClient(configConfig)
+        viaCepRepositoryInterface := providers.ProvideViaCepRepository(viaCepClient)
+        weatherClient := providers.ProvideWeatherClient(configConfig)
+        weatherRepositoryInterface := providers.ProvideWeatherRepository(weatherClient)
+        getWeatherByCepUseCaseInterface := weather.ProvideGetWeatherByCepUseCase(viaCepRepositoryInterface, weatherRepositoryInterface, loggerLogger)
+        weatherController := weather.NewWeatherController(getWeatherByCepUseCaseInterface, loggerLogger)
+        app := NewApp(server, weatherController, loggerLogger)
+        return app, nil
+}</span>
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package getWeatherByCep
+
+import (
+        "net/http"
+
+        sharedErrors "github.com/gerps2/desafio-cloud-run/shared/errors"
+)
+
+// Códigos de erro específicos do GetWeatherByCep
+const (
+        CodeInvalidZipcode      = "INVALID_ZIPCODE"
+        CodeZipcodeNotFound     = "ZIPCODE_NOT_FOUND"
+        CodeWeatherServiceError = "WEATHER_SERVICE_ERROR"
+)
+
+func NewInvalidZipcodeError() *sharedErrors.APIError <span class="cov8" title="1">{
+        return sharedErrors.NewAPIError(
+                CodeInvalidZipcode,
+                "invalid zipcode",
+                http.StatusUnprocessableEntity,
+                []string{"The provided zipcode format is invalid"},
+        )
+}</span>
+
+func NewZipcodeNotFoundError() *sharedErrors.APIError <span class="cov8" title="1">{
+        return sharedErrors.NewAPIError(
+                CodeZipcodeNotFound,
+                "can not find zipcode",
+                http.StatusNotFound,
+                []string{"The provided zipcode was not found"},
+        )
+}</span>
+
+func NewWeatherServiceError() *sharedErrors.APIError <span class="cov8" title="1">{
+        return sharedErrors.NewExternalServiceError(
+                "Weather service temporarily unavailable",
+                []string{"Unable to fetch weather data from external service"},
+        )
+}</span>
+
+func NewWeatherValidationError(message string, causes []string) *sharedErrors.APIError <span class="cov0" title="0">{
+        return sharedErrors.NewValidationError(message, causes)
+}</span>
+
+func NewWeatherBusinessError(code, message string, causes []string) *sharedErrors.APIError <span class="cov0" title="0">{
+        return sharedErrors.NewBusinessError(code, message, causes)
+}</span>
+
+func NewWeatherExternalError(message string, causes []string) *sharedErrors.APIError <span class="cov0" title="0">{
+        return sharedErrors.NewExternalServiceError(message, causes)
+}</span>
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package getWeatherByCep
+
+import (
+        "context"
+
+        "github.com/gerps2/desafio-cloud-run/shared/domain/valueObjects"
+        "github.com/gerps2/desafio-cloud-run/shared/logger"
+        viacep "github.com/gerps2/desafio-cloud-run/shared/repositories/external_apis/viapcep"
+        weather "github.com/gerps2/desafio-cloud-run/shared/repositories/external_apis/weather"
+)
+
+type GetWeatherByCepInput struct {
+        CepString string
+}
+
+type GetWeatherByCepOutput struct {
+        TempC float64 `json:"temp_C"`
+        TempF float64 `json:"temp_F"`
+        TempK float64 `json:"temp_K"`
+}
+
+type GetWeatherByCepUseCase interface {
+        Execute(ctx context.Context, input GetWeatherByCepInput) (*GetWeatherByCepOutput, error)
+}
+
+type getWeatherByCepUseCase struct {
+        viaCepRepo    viacep.ViaCepRepositoryInterface
+        weatherRepo   weather.WeatherRepositoryInterface
+        logger        logger.Logger
+}
+
+func NewGetWeatherByCepUseCase(viaCepRepo viacep.ViaCepRepositoryInterface, weatherRepo weather.WeatherRepositoryInterface, logger logger.Logger) GetWeatherByCepUseCaseInterface <span class="cov8" title="1">{
+        return &amp;getWeatherByCepUseCase{
+                viaCepRepo:  viaCepRepo,
+                weatherRepo: weatherRepo,
+                logger:      logger,
+        }
+}</span>
+
+func (gwbc *getWeatherByCepUseCase) Execute(ctx context.Context, input GetWeatherByCepInput) (*GetWeatherByCepOutput, error) <span class="cov8" title="1">{
+        gwbc.logger.Debug("Executing get weather by cep use case for CEP: %s", input.CepString)
+
+        cep, err := valueObjects.NewCep(input.CepString)
+        if err != nil </span><span class="cov8" title="1">{
+                gwbc.logger.Error("Invalid CEP format: %s", input.CepString)
+                return nil, NewInvalidZipcodeError()
+        }</span>
+
+        <span class="cov8" title="1">address, err := gwbc.viaCepRepo.GetAddress(ctx, cep)
+        if err != nil </span><span class="cov8" title="1">{
+                gwbc.logger.Error("Error fetching address for CEP %s: %v", input.CepString, err)
+                return nil, NewZipcodeNotFoundError()
+        }</span>
+
+        <span class="cov8" title="1">gwbc.logger.Info("Address found for CEP %s: %s, %s", input.CepString, address.City, address.State)
+
+        weatherData, err := gwbc.weatherRepo.GetWeather(ctx, address.City)
+        if err != nil </span><span class="cov8" title="1">{
+                gwbc.logger.Error("Error fetching weather for city %s: %v", address.City, err)
+                return nil, NewWeatherServiceError()
+        }</span>
+
+        <span class="cov8" title="1">gwbc.logger.Info("Weather data found for city %s: %.1f°C", address.City, weatherData.Current.TempC)
+
+        tempKelvin := weatherData.Current.TempC + 273.15
+
+        return &amp;GetWeatherByCepOutput{
+                TempC: weatherData.Current.TempC,
+                TempF: weatherData.Current.TempF,
+                TempK: tempKelvin,
+        }, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">// Code generated by mockery v2.53.4. DO NOT EDIT.
+
+package mocks
+
+import (
+        context "context"
+
+        getWeatherByCep "github.com/gerps2/desafio-cloud-run/features/weather/getWeatherByCep"
+        mock "github.com/stretchr/testify/mock"
+)
+
+// MockGetWeatherByCepUseCase is an autogenerated mock type for the GetWeatherByCepUseCase type
+type MockGetWeatherByCepUseCase struct {
+        mock.Mock
+}
+
+type MockGetWeatherByCepUseCase_Expecter struct {
+        mock *mock.Mock
+}
+
+func (_m *MockGetWeatherByCepUseCase) EXPECT() *MockGetWeatherByCepUseCase_Expecter <span class="cov0" title="0">{
+        return &amp;MockGetWeatherByCepUseCase_Expecter{mock: &amp;_m.Mock}
+}</span>
+
+// Execute provides a mock function with given fields: ctx, input
+func (_m *MockGetWeatherByCepUseCase) Execute(ctx context.Context, input getWeatherByCep.GetWeatherByCepInput) (*getWeatherByCep.GetWeatherByCepOutput, error) <span class="cov0" title="0">{
+        ret := _m.Called(ctx, input)
+
+        if len(ret) == 0 </span><span class="cov0" title="0">{
+                panic("no return value specified for Execute")</span>
+        }
+
+        <span class="cov0" title="0">var r0 *getWeatherByCep.GetWeatherByCepOutput
+        var r1 error
+        if rf, ok := ret.Get(0).(func(context.Context, getWeatherByCep.GetWeatherByCepInput) (*getWeatherByCep.GetWeatherByCepOutput, error)); ok </span><span class="cov0" title="0">{
+                return rf(ctx, input)
+        }</span>
+        <span class="cov0" title="0">if rf, ok := ret.Get(0).(func(context.Context, getWeatherByCep.GetWeatherByCepInput) *getWeatherByCep.GetWeatherByCepOutput); ok </span><span class="cov0" title="0">{
+                r0 = rf(ctx, input)
+        }</span> else<span class="cov0" title="0"> {
+                if ret.Get(0) != nil </span><span class="cov0" title="0">{
+                        r0 = ret.Get(0).(*getWeatherByCep.GetWeatherByCepOutput)
+                }</span>
+        }
+
+        <span class="cov0" title="0">if rf, ok := ret.Get(1).(func(context.Context, getWeatherByCep.GetWeatherByCepInput) error); ok </span><span class="cov0" title="0">{
+                r1 = rf(ctx, input)
+        }</span> else<span class="cov0" title="0"> {
+                r1 = ret.Error(1)
+        }</span>
+
+        <span class="cov0" title="0">return r0, r1</span>
+}
+
+// MockGetWeatherByCepUseCase_Execute_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Execute'
+type MockGetWeatherByCepUseCase_Execute_Call struct {
+        *mock.Call
+}
+
+// Execute is a helper method to define mock.On call
+//   - ctx context.Context
+//   - input getWeatherByCep.GetWeatherByCepInput
+func (_e *MockGetWeatherByCepUseCase_Expecter) Execute(ctx interface{}, input interface{}) *MockGetWeatherByCepUseCase_Execute_Call <span class="cov0" title="0">{
+        return &amp;MockGetWeatherByCepUseCase_Execute_Call{Call: _e.mock.On("Execute", ctx, input)}
+}</span>
+
+func (_c *MockGetWeatherByCepUseCase_Execute_Call) Run(run func(ctx context.Context, input getWeatherByCep.GetWeatherByCepInput)) *MockGetWeatherByCepUseCase_Execute_Call <span class="cov0" title="0">{
+        _c.Call.Run(func(args mock.Arguments) </span><span class="cov0" title="0">{
+                run(args[0].(context.Context), args[1].(getWeatherByCep.GetWeatherByCepInput))
+        }</span>)
+        <span class="cov0" title="0">return _c</span>
+}
+
+func (_c *MockGetWeatherByCepUseCase_Execute_Call) Return(_a0 *getWeatherByCep.GetWeatherByCepOutput, _a1 error) *MockGetWeatherByCepUseCase_Execute_Call <span class="cov0" title="0">{
+        _c.Call.Return(_a0, _a1)
+        return _c
+}</span>
+
+func (_c *MockGetWeatherByCepUseCase_Execute_Call) RunAndReturn(run func(context.Context, getWeatherByCep.GetWeatherByCepInput) (*getWeatherByCep.GetWeatherByCepOutput, error)) *MockGetWeatherByCepUseCase_Execute_Call <span class="cov0" title="0">{
+        _c.Call.Return(run)
+        return _c
+}</span>
+
+// NewMockGetWeatherByCepUseCase creates a new instance of MockGetWeatherByCepUseCase. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewMockGetWeatherByCepUseCase(t interface {
+        mock.TestingT
+        Cleanup(func())
+}) *MockGetWeatherByCepUseCase <span class="cov0" title="0">{
+        mock := &amp;MockGetWeatherByCepUseCase{}
+        mock.Mock.Test(t)
+
+        t.Cleanup(func() </span><span class="cov0" title="0">{ mock.AssertExpectations(t) }</span>)
+
+        <span class="cov0" title="0">return mock</span>
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">// Code generated by mockery v2.53.4. DO NOT EDIT.
+
+package mocks
+
+import (
+        context "context"
+
+        getWeatherByCep "github.com/gerps2/desafio-cloud-run/features/weather/getWeatherByCep"
+        mock "github.com/stretchr/testify/mock"
+)
+
+// MockGetWeatherByCepUseCaseInterface is an autogenerated mock type for the GetWeatherByCepUseCaseInterface type
+type MockGetWeatherByCepUseCaseInterface struct {
+        mock.Mock
+}
+
+type MockGetWeatherByCepUseCaseInterface_Expecter struct {
+        mock *mock.Mock
+}
+
+func (_m *MockGetWeatherByCepUseCaseInterface) EXPECT() *MockGetWeatherByCepUseCaseInterface_Expecter <span class="cov0" title="0">{
+        return &amp;MockGetWeatherByCepUseCaseInterface_Expecter{mock: &amp;_m.Mock}
+}</span>
+
+// Execute provides a mock function with given fields: ctx, input
+func (_m *MockGetWeatherByCepUseCaseInterface) Execute(ctx context.Context, input getWeatherByCep.GetWeatherByCepInput) (*getWeatherByCep.GetWeatherByCepOutput, error) <span class="cov0" title="0">{
+        ret := _m.Called(ctx, input)
+
+        if len(ret) == 0 </span><span class="cov0" title="0">{
+                panic("no return value specified for Execute")</span>
+        }
+
+        <span class="cov0" title="0">var r0 *getWeatherByCep.GetWeatherByCepOutput
+        var r1 error
+        if rf, ok := ret.Get(0).(func(context.Context, getWeatherByCep.GetWeatherByCepInput) (*getWeatherByCep.GetWeatherByCepOutput, error)); ok </span><span class="cov0" title="0">{
+                return rf(ctx, input)
+        }</span>
+        <span class="cov0" title="0">if rf, ok := ret.Get(0).(func(context.Context, getWeatherByCep.GetWeatherByCepInput) *getWeatherByCep.GetWeatherByCepOutput); ok </span><span class="cov0" title="0">{
+                r0 = rf(ctx, input)
+        }</span> else<span class="cov0" title="0"> {
+                if ret.Get(0) != nil </span><span class="cov0" title="0">{
+                        r0 = ret.Get(0).(*getWeatherByCep.GetWeatherByCepOutput)
+                }</span>
+        }
+
+        <span class="cov0" title="0">if rf, ok := ret.Get(1).(func(context.Context, getWeatherByCep.GetWeatherByCepInput) error); ok </span><span class="cov0" title="0">{
+                r1 = rf(ctx, input)
+        }</span> else<span class="cov0" title="0"> {
+                r1 = ret.Error(1)
+        }</span>
+
+        <span class="cov0" title="0">return r0, r1</span>
+}
+
+// MockGetWeatherByCepUseCaseInterface_Execute_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Execute'
+type MockGetWeatherByCepUseCaseInterface_Execute_Call struct {
+        *mock.Call
+}
+
+// Execute is a helper method to define mock.On call
+//   - ctx context.Context
+//   - input getWeatherByCep.GetWeatherByCepInput
+func (_e *MockGetWeatherByCepUseCaseInterface_Expecter) Execute(ctx interface{}, input interface{}) *MockGetWeatherByCepUseCaseInterface_Execute_Call <span class="cov0" title="0">{
+        return &amp;MockGetWeatherByCepUseCaseInterface_Execute_Call{Call: _e.mock.On("Execute", ctx, input)}
+}</span>
+
+func (_c *MockGetWeatherByCepUseCaseInterface_Execute_Call) Run(run func(ctx context.Context, input getWeatherByCep.GetWeatherByCepInput)) *MockGetWeatherByCepUseCaseInterface_Execute_Call <span class="cov0" title="0">{
+        _c.Call.Run(func(args mock.Arguments) </span><span class="cov0" title="0">{
+                run(args[0].(context.Context), args[1].(getWeatherByCep.GetWeatherByCepInput))
+        }</span>)
+        <span class="cov0" title="0">return _c</span>
+}
+
+func (_c *MockGetWeatherByCepUseCaseInterface_Execute_Call) Return(_a0 *getWeatherByCep.GetWeatherByCepOutput, _a1 error) *MockGetWeatherByCepUseCaseInterface_Execute_Call <span class="cov0" title="0">{
+        _c.Call.Return(_a0, _a1)
+        return _c
+}</span>
+
+func (_c *MockGetWeatherByCepUseCaseInterface_Execute_Call) RunAndReturn(run func(context.Context, getWeatherByCep.GetWeatherByCepInput) (*getWeatherByCep.GetWeatherByCepOutput, error)) *MockGetWeatherByCepUseCaseInterface_Execute_Call <span class="cov0" title="0">{
+        _c.Call.Return(run)
+        return _c
+}</span>
+
+// NewMockGetWeatherByCepUseCaseInterface creates a new instance of MockGetWeatherByCepUseCaseInterface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewMockGetWeatherByCepUseCaseInterface(t interface {
+        mock.TestingT
+        Cleanup(func())
+}) *MockGetWeatherByCepUseCaseInterface <span class="cov0" title="0">{
+        mock := &amp;MockGetWeatherByCepUseCaseInterface{}
+        mock.Mock.Test(t)
+
+        t.Cleanup(func() </span><span class="cov0" title="0">{ mock.AssertExpectations(t) }</span>)
+
+        <span class="cov0" title="0">return mock</span>
+}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package weather
+
+import (
+        "context"
+
+        "github.com/gerps2/desafio-cloud-run/features/weather/getWeatherByCep"
+        sharedErrors "github.com/gerps2/desafio-cloud-run/shared/errors"
+        httpShared "github.com/gerps2/desafio-cloud-run/shared/http"
+        "github.com/gerps2/desafio-cloud-run/shared/logger"
+
+        "github.com/gin-gonic/gin"
+)
+
+type WeatherController struct {
+        getWeatherByCepUseCase getWeatherByCep.GetWeatherByCepUseCaseInterface
+        logger                 logger.Logger
+}
+
+func NewWeatherController(getWeatherByCepUseCase getWeatherByCep.GetWeatherByCepUseCaseInterface, logger logger.Logger) *WeatherController <span class="cov8" title="1">{
+        return &amp;WeatherController{
+                getWeatherByCepUseCase: getWeatherByCepUseCase,
+                logger:                 logger,
+        }
+}</span>
+
+// RegisterRoutes registra as rotas do weather controller
+func (wc *WeatherController) RegisterRoutes(router *gin.Engine) <span class="cov8" title="1">{
+        api := router.Group("/api/v1")
+        </span><span class="cov8" title="1">{
+                api.GET("/weather/:cep", wc.GetWeatherByCep)
+        }</span>
+}
+
+func (wc *WeatherController) GetWeatherByCep(c *gin.Context) <span class="cov8" title="1">{
+        wc.logger.Info("GetWeatherByCep endpoint called")
+
+        cepParam := c.Param("cep")
+        if cepParam == "" </span><span class="cov0" title="0">{
+                wc.logger.Error("CEP parameter is required")
+                httpShared.RespondWithValidationError(c, "CEP parameter is required", []string{"CEP parameter must be provided in the URL path"})
+                return
+        }</span>
+
+        <span class="cov8" title="1">input := getWeatherByCep.GetWeatherByCepInput{
+                CepString: cepParam,
+        }
+
+        result, err := wc.getWeatherByCepUseCase.Execute(c.Request.Context(), input)
+        if err != nil </span><span class="cov8" title="1">{
+                if c.Request.Context().Err() == context.DeadlineExceeded </span><span class="cov0" title="0">{
+                        wc.logger.Error("Request timeout exceeded for CEP: %s", cepParam)
+                        return
+                }</span>
+                <span class="cov8" title="1">wc.logger.Error("Error executing GetWeatherByCep use case: %v", err)
+
+                if apiErr, ok := err.(*sharedErrors.APIError); ok </span><span class="cov8" title="1">{
+                        httpShared.RespondWithAPIError(c, apiErr)
+                }</span> else<span class="cov8" title="1"> {
+                        httpShared.RespondWithInternalError(c, "Failed to get weather data", []string{err.Error()})
+                }</span>
+                <span class="cov8" title="1">return</span>
+        }
+
+        <span class="cov8" title="1">wc.logger.Info("Weather data retrieved successfully for CEP: %s", cepParam)
+        httpShared.RespondWithSuccess(c, result, "Weather data retrieved successfully")</span>
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package weather
+
+import (
+        "github.com/gerps2/desafio-cloud-run/features/weather/getWeatherByCep"
+        "github.com/gerps2/desafio-cloud-run/shared/logger"
+        viacep "github.com/gerps2/desafio-cloud-run/shared/repositories/external_apis/viapcep"
+        weather "github.com/gerps2/desafio-cloud-run/shared/repositories/external_apis/weather"
+)
+
+func ProvideGetWeatherByCepUseCase(
+        viaCepRepo viacep.ViaCepRepositoryInterface,
+        weatherRepo weather.WeatherRepositoryInterface,
+        logger logger.Logger,
+) getWeatherByCep.GetWeatherByCepUseCaseInterface <span class="cov0" title="0">{
+        return getWeatherByCep.NewGetWeatherByCepUseCase(viaCepRepo, weatherRepo, logger)
+}</span>
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package config
+
+import (
+        "log"
+
+        "github.com/spf13/viper"
+)
+
+type Config struct {
+        Server       ServerConfig       `mapstructure:"server"`
+        App          AppConfig          `mapstructure:"app"`
+        ExternalAPIs ExternalAPIsConfig `mapstructure:"external_apis"`
+}
+
+type ServerConfig struct {
+        Port string `mapstructure:"port"`
+        Host string `mapstructure:"host"`
+}
+
+type AppConfig struct {
+        Env                string `mapstructure:"env"`
+        RequestTimeoutSec  int    `mapstructure:"request_timeout_sec"`
+}
+
+type ExternalAPIsConfig struct {
+        ViaCep  ViaCepConfig  `mapstructure:"viacep"`
+        Weather WeatherConfig `mapstructure:"weather"`
+}
+
+type ViaCepConfig struct {
+        BaseURL string `mapstructure:"base_url"`
+}
+
+type WeatherConfig struct {
+        BaseURL string `mapstructure:"base_url"`
+        APIKey  string `mapstructure:"api_key"`
+}
+
+func Load() *Config <span class="cov0" title="0">{
+        viper.SetConfigFile(".env")
+        viper.SetConfigType("env")
+        viper.AutomaticEnv()
+
+        // Set defaults
+        viper.SetDefault("PORT", "8080")
+        viper.SetDefault("HOST", "localhost")
+        viper.SetDefault("ENV", "development")
+        viper.SetDefault("REQUEST_TIMEOUT_SEC", 300) // 5 minutos
+        viper.SetDefault("VIACEP_BASE_URL", "https://viacep.com.br/ws/")
+        viper.SetDefault("WEATHER_BASE_URL", "http://api.weatherapi.com/v1/current.json?key=")
+        viper.SetDefault("WEATHER_API_KEY", "")
+
+        if err := viper.ReadInConfig(); err != nil </span><span class="cov0" title="0">{
+                log.Printf("Warning: Could not read config file: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">var config Config
+        config.Server.Port = viper.GetString("PORT")
+        config.Server.Host = viper.GetString("HOST")
+        config.App.Env = viper.GetString("ENV")
+        config.App.RequestTimeoutSec = viper.GetInt("REQUEST_TIMEOUT_SEC")
+        config.ExternalAPIs.ViaCep.BaseURL = viper.GetString("VIACEP_BASE_URL")
+        config.ExternalAPIs.Weather.BaseURL = viper.GetString("WEATHER_BASE_URL")
+        config.ExternalAPIs.Weather.APIKey = viper.GetString("WEATHER_API_KEY")
+
+        return &amp;config</span>
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package valueObjects
+
+import (
+        "errors"
+        "regexp"
+        "strings"
+)
+
+type Cep string
+
+func NewCep(codigo string) (Cep, error) <span class="cov8" title="1">{
+        codigo = strings.TrimSpace(codigo)
+
+        if !isValidCep(codigo) </span><span class="cov8" title="1">{
+                return "", errors.New("CEP inválido")
+        }</span>
+
+        <span class="cov8" title="1">if len(codigo) == 8 &amp;&amp; !strings.Contains(codigo, "-") </span><span class="cov8" title="1">{
+                codigo = codigo[:5] + "-" + codigo[5:]
+        }</span>
+
+        <span class="cov8" title="1">return Cep(codigo), nil</span>
+}
+
+func isValidCep(codigo string) bool <span class="cov8" title="1">{
+        reDash := regexp.MustCompile(`^\d{5}-\d{3}$`)
+        reNoDash := regexp.MustCompile(`^\d{8}$`)
+        return reDash.MatchString(codigo) || reNoDash.MatchString(codigo)
+}</span>
+
+func (c Cep) String() string <span class="cov8" title="1">{
+        return string(c)
+}</span>
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package errors
+
+import (
+        "net/http"
+)
+
+type APIError struct {
+        Code       string   `json:"code"`
+        Message    string   `json:"message"`
+        StatusCode int      `json:"-"`
+        Causes     []string `json:"causes,omitempty"`
+        Context    string   `json:"context,omitempty"`
+}
+
+func (e APIError) Error() string <span class="cov0" title="0">{
+        return e.Message
+}</span>
+
+type ErrorType string
+
+const (
+        ValidationError ErrorType = "validation"
+        BusinessError   ErrorType = "business"
+        SystemError     ErrorType = "system"
+        ExternalError   ErrorType = "external"
+)
+
+const (
+        // Erros de validação (400)
+        CodeInvalidInput     = "INVALID_INPUT"
+        CodeMissingParameter = "MISSING_PARAMETER"
+        CodeInvalidFormat    = "INVALID_FORMAT"
+
+        // Erros de negócio (400-404)
+        CodeResourceNotFound = "RESOURCE_NOT_FOUND"
+        CodeBusinessRule     = "BUSINESS_RULE_VIOLATION"
+
+        // Erros de sistema (500)
+        CodeInternalError = "INTERNAL_SERVER_ERROR"
+        CodeDatabaseError = "DATABASE_ERROR"
+
+        // Erros externos (502-504)
+        CodeExternalService    = "EXTERNAL_SERVICE_ERROR"
+        CodeServiceTimeout     = "SERVICE_TIMEOUT"
+        CodeServiceUnavailable = "SERVICE_UNAVAILABLE"
+
+        // Erros de autenticação/autorização (401-403)
+        CodeUnauthorized = "UNAUTHORIZED"
+        CodeForbidden    = "FORBIDDEN"
+)
+
+func NewAPIError(code, message string, statusCode int, causes []string) *APIError <span class="cov0" title="0">{
+        return &amp;APIError{
+                Code:       code,
+                Message:    message,
+                StatusCode: statusCode,
+                Causes:     causes,
+        }
+}</span>
+
+func NewValidationError(message string, causes []string) *APIError <span class="cov0" title="0">{
+        return &amp;APIError{
+                Code:       CodeInvalidInput,
+                Message:    message,
+                StatusCode: http.StatusBadRequest,
+                Causes:     causes,
+                Context:    string(ValidationError),
+        }
+}</span>
+
+func NewBusinessError(code, message string, causes []string) *APIError <span class="cov0" title="0">{
+        return &amp;APIError{
+                Code:       code,
+                Message:    message,
+                StatusCode: http.StatusBadRequest,
+                Causes:     causes,
+                Context:    string(BusinessError),
+        }
+}</span>
+
+func NewNotFoundError(message string, causes []string) *APIError <span class="cov0" title="0">{
+        return &amp;APIError{
+                Code:       CodeResourceNotFound,
+                Message:    message,
+                StatusCode: http.StatusNotFound,
+                Causes:     causes,
+                Context:    string(BusinessError),
+        }
+}</span>
+
+func NewInternalError(message string, causes []string) *APIError <span class="cov0" title="0">{
+        return &amp;APIError{
+                Code:       CodeInternalError,
+                Message:    message,
+                StatusCode: http.StatusInternalServerError,
+                Causes:     causes,
+                Context:    string(SystemError),
+        }
+}</span>
+
+func NewExternalServiceError(message string, causes []string) *APIError <span class="cov0" title="0">{
+        return &amp;APIError{
+                Code:       CodeExternalService,
+                Message:    message,
+                StatusCode: http.StatusBadGateway,
+                Causes:     causes,
+                Context:    string(ExternalError),
+        }
+}</span>
+
+func NewTimeoutError(message string, causes []string) *APIError <span class="cov0" title="0">{
+        return &amp;APIError{
+                Code:       CodeServiceTimeout,
+                Message:    message,
+                StatusCode: http.StatusGatewayTimeout,
+                Causes:     causes,
+                Context:    string(ExternalError),
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package http
+
+import (
+        "net/http"
+
+        "github.com/gerps2/desafio-cloud-run/shared/errors"
+        "github.com/gin-gonic/gin"
+)
+
+type APIResponse struct {
+        Data    interface{} `json:"data"`
+        Message string      `json:"message"`
+        Causes  []string    `json:"causes,omitempty"`
+}
+
+func RespondWithSuccess(c *gin.Context, data interface{}, message string) <span class="cov0" title="0">{
+        response := APIResponse{
+                Data:    data,
+                Message: message,
+                Causes:  nil,
+        }
+        c.JSON(http.StatusOK, response)
+}</span>
+
+func RespondWithAPIError(c *gin.Context, apiError *errors.APIError) <span class="cov0" title="0">{
+        response := APIResponse{
+                Data:    nil,
+                Message: apiError.Message,
+                Causes:  apiError.Causes,
+        }
+        c.JSON(apiError.StatusCode, response)
+}</span>
+
+func RespondWithError(c *gin.Context, statusCode int, message string, causes []string) <span class="cov0" title="0">{
+        response := APIResponse{
+                Data:    nil,
+                Message: message,
+                Causes:  causes,
+        }
+        c.JSON(statusCode, response)
+}</span>
+
+func RespondWithValidationError(c *gin.Context, message string, causes []string) <span class="cov0" title="0">{
+        apiError := errors.NewValidationError(message, causes)
+        RespondWithAPIError(c, apiError)
+}</span>
+
+func RespondWithBusinessError(c *gin.Context, code, message string, causes []string) <span class="cov0" title="0">{
+        apiError := errors.NewBusinessError(code, message, causes)
+        RespondWithAPIError(c, apiError)
+}</span>
+
+func RespondWithNotFound(c *gin.Context, message string, causes []string) <span class="cov0" title="0">{
+        apiError := errors.NewNotFoundError(message, causes)
+        RespondWithAPIError(c, apiError)
+}</span>
+
+func RespondWithInternalError(c *gin.Context, message string, causes []string) <span class="cov0" title="0">{
+        if message == "" </span><span class="cov0" title="0">{
+                message = "Internal server error occurred"
+        }</span>
+        <span class="cov0" title="0">apiError := errors.NewInternalError(message, causes)
+        RespondWithAPIError(c, apiError)</span>
+}
+
+func RespondWithExternalServiceError(c *gin.Context, message string, causes []string) <span class="cov0" title="0">{
+        apiError := errors.NewExternalServiceError(message, causes)
+        RespondWithAPIError(c, apiError)
+}</span>
+
+func RespondWithTimeout(c *gin.Context, message string, causes []string) <span class="cov0" title="0">{
+        if message == "" </span><span class="cov0" title="0">{
+                message = "Request timeout exceeded"
+        }</span>
+        <span class="cov0" title="0">apiError := errors.NewTimeoutError(message, causes)
+        RespondWithAPIError(c, apiError)</span>
+}
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">package http
+
+import (
+        "context"
+        "fmt"
+        "net/http"
+        "time"
+
+        "github.com/gerps2/desafio-cloud-run/shared/config"
+        "github.com/gerps2/desafio-cloud-run/shared/logger"
+
+        "github.com/gin-gonic/gin"
+)
+
+type Server struct {
+        router *gin.Engine
+        server *http.Server
+        config *config.Config
+        logger logger.Logger
+}
+
+// TimeoutMiddleware cria um middleware que adiciona timeout às requisições
+func TimeoutMiddleware(timeout time.Duration) gin.HandlerFunc <span class="cov0" title="0">{
+        return gin.HandlerFunc(func(c *gin.Context) </span><span class="cov0" title="0">{
+                ctx, cancel := context.WithTimeout(c.Request.Context(), timeout)
+                defer cancel()
+
+                c.Request = c.Request.WithContext(ctx)
+                c.Next()
+
+                // Verificar se houve timeout
+                if ctx.Err() == context.DeadlineExceeded </span><span class="cov0" title="0">{
+                        RespondWithTimeout(c, "", []string{"Request exceeded the configured timeout"})
+                        c.Abort()
+                }</span>
+        })
+}
+
+// ErrorHandlerMiddleware cria um middleware que captura panics e erros não tratados
+func ErrorHandlerMiddleware(logger logger.Logger) gin.HandlerFunc <span class="cov0" title="0">{
+        return gin.HandlerFunc(func(c *gin.Context) </span><span class="cov0" title="0">{
+                defer func() </span><span class="cov0" title="0">{
+                        if err := recover(); err != nil </span><span class="cov0" title="0">{
+                                // Log do panic para debugging
+                                logger.Error("Panic recovered: %v", err)
+                                
+                                // Verificar se a resposta já foi enviada
+                                if !c.Writer.Written() </span><span class="cov0" title="0">{
+                                        causes := []string{"An unexpected error occurred in the application"}
+                                        RespondWithInternalError(c, "Internal server error", causes)
+                                }</span>
+                                
+                                <span class="cov0" title="0">c.Abort()</span>
+                        }
+                }()
+                
+                <span class="cov0" title="0">c.Next()
+                
+                // Verificar se houve algum erro durante o processamento
+                if len(c.Errors) &gt; 0 </span><span class="cov0" title="0">{
+                        // Se ainda não foi enviada uma resposta
+                        if !c.Writer.Written() </span><span class="cov0" title="0">{
+                                lastError := c.Errors.Last()
+                                logger.Error("Request error: %v", lastError.Error())
+                                
+                                causes := []string{lastError.Error()}
+                                RespondWithInternalError(c, "An error occurred while processing the request", causes)
+                        }</span>
+                }
+        })
+}
+
+func NewServer(cfg *config.Config, log logger.Logger) *Server <span class="cov0" title="0">{
+        if cfg.App.Env == "production" </span><span class="cov0" title="0">{
+                gin.SetMode(gin.ReleaseMode)
+        }</span>
+
+        <span class="cov0" title="0">router := gin.New()
+        router.Use(gin.Logger())
+        
+        // Aplicar middleware de tratamento de erros global (substitui gin.Recovery())
+        router.Use(ErrorHandlerMiddleware(log))
+        
+        // Aplicar middleware de timeout global
+        timeout := time.Duration(cfg.App.RequestTimeoutSec) * time.Second
+        router.Use(TimeoutMiddleware(timeout))
+
+        return &amp;Server{
+                config: cfg,
+                logger: log,
+                router: router,
+        }</span>
+}
+
+func (s *Server) GetRouter() *gin.Engine <span class="cov0" title="0">{
+        return s.router
+}</span>
+
+func (s *Server) Start() error <span class="cov0" title="0">{
+        addr := fmt.Sprintf("%s:%s", s.config.Server.Host, s.config.Server.Port)
+        
+        s.server = &amp;http.Server{
+                Addr:         addr,
+                Handler:      s.router,
+                ReadTimeout:  15 * time.Second,
+                WriteTimeout: 15 * time.Second,
+                IdleTimeout:  60 * time.Second,
+        }
+
+        s.logger.Info("Starting server on %s", addr)
+        
+        if err := s.server.ListenAndServe(); err != nil &amp;&amp; err != http.ErrServerClosed </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to start server: %w", err)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (s *Server) Shutdown(ctx context.Context) error <span class="cov0" title="0">{
+        s.logger.Info("Shutting down server...")
+        return s.server.Shutdown(ctx)
+}</span>
+</pre>
+		
+		<pre class="file" id="file13" style="display: none">package logger
+
+import (
+        "log"
+        "os"
+)
+
+//go:generate mockery --name=Logger
+type Logger interface {
+        Info(msg string, args ...interface{})
+        Error(msg string, args ...interface{})
+        Debug(msg string, args ...interface{})
+        Warn(msg string, args ...interface{})
+}
+
+type logger struct {
+        infoLogger  *log.Logger
+        errorLogger *log.Logger
+        debugLogger *log.Logger
+        warnLogger  *log.Logger
+}
+
+func New() Logger <span class="cov0" title="0">{
+        return &amp;logger{
+                infoLogger:  log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile),
+                errorLogger: log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile),
+                debugLogger: log.New(os.Stdout, "DEBUG: ", log.Ldate|log.Ltime|log.Lshortfile),
+                warnLogger:  log.New(os.Stdout, "WARN: ", log.Ldate|log.Ltime|log.Lshortfile),
+        }
+}</span>
+
+func (l *logger) Info(msg string, args ...interface{}) <span class="cov0" title="0">{
+        l.infoLogger.Printf(msg, args...)
+}</span>
+
+func (l *logger) Error(msg string, args ...interface{}) <span class="cov0" title="0">{
+        l.errorLogger.Printf(msg, args...)
+}</span>
+
+func (l *logger) Debug(msg string, args ...interface{}) <span class="cov0" title="0">{
+        l.debugLogger.Printf(msg, args...)
+}</span>
+
+func (l *logger) Warn(msg string, args ...interface{}) <span class="cov0" title="0">{
+        l.warnLogger.Printf(msg, args...)
+}</span>
+</pre>
+		
+		<pre class="file" id="file14" style="display: none">// Code generated by mockery v2.53.4. DO NOT EDIT.
+
+package mocks
+
+import mock "github.com/stretchr/testify/mock"
+
+// MockLogger is an autogenerated mock type for the Logger type
+type MockLogger struct {
+        mock.Mock
+}
+
+type MockLogger_Expecter struct {
+        mock *mock.Mock
+}
+
+func (_m *MockLogger) EXPECT() *MockLogger_Expecter <span class="cov0" title="0">{
+        return &amp;MockLogger_Expecter{mock: &amp;_m.Mock}
+}</span>
+
+// Debug provides a mock function with given fields: msg, args
+func (_m *MockLogger) Debug(msg string, args ...interface{}) <span class="cov0" title="0">{
+        var _ca []interface{}
+        _ca = append(_ca, msg)
+        _ca = append(_ca, args...)
+        _m.Called(_ca...)
+}</span>
+
+// MockLogger_Debug_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Debug'
+type MockLogger_Debug_Call struct {
+        *mock.Call
+}
+
+// Debug is a helper method to define mock.On call
+//   - msg string
+//   - args ...interface{}
+func (_e *MockLogger_Expecter) Debug(msg interface{}, args ...interface{}) *MockLogger_Debug_Call <span class="cov0" title="0">{
+        return &amp;MockLogger_Debug_Call{Call: _e.mock.On("Debug",
+                append([]interface{}{msg}, args...)...)}
+}</span>
+
+func (_c *MockLogger_Debug_Call) Run(run func(msg string, args ...interface{})) *MockLogger_Debug_Call <span class="cov0" title="0">{
+        _c.Call.Run(func(args mock.Arguments) </span><span class="cov0" title="0">{
+                variadicArgs := make([]interface{}, len(args)-1)
+                for i, a := range args[1:] </span><span class="cov0" title="0">{
+                        if a != nil </span><span class="cov0" title="0">{
+                                variadicArgs[i] = a.(interface{})
+                        }</span>
+                }
+                <span class="cov0" title="0">run(args[0].(string), variadicArgs...)</span>
+        })
+        <span class="cov0" title="0">return _c</span>
+}
+
+func (_c *MockLogger_Debug_Call) Return() *MockLogger_Debug_Call <span class="cov0" title="0">{
+        _c.Call.Return()
+        return _c
+}</span>
+
+func (_c *MockLogger_Debug_Call) RunAndReturn(run func(string, ...interface{})) *MockLogger_Debug_Call <span class="cov0" title="0">{
+        _c.Run(run)
+        return _c
+}</span>
+
+// Error provides a mock function with given fields: msg, args
+func (_m *MockLogger) Error(msg string, args ...interface{}) <span class="cov0" title="0">{
+        var _ca []interface{}
+        _ca = append(_ca, msg)
+        _ca = append(_ca, args...)
+        _m.Called(_ca...)
+}</span>
+
+// MockLogger_Error_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Error'
+type MockLogger_Error_Call struct {
+        *mock.Call
+}
+
+// Error is a helper method to define mock.On call
+//   - msg string
+//   - args ...interface{}
+func (_e *MockLogger_Expecter) Error(msg interface{}, args ...interface{}) *MockLogger_Error_Call <span class="cov0" title="0">{
+        return &amp;MockLogger_Error_Call{Call: _e.mock.On("Error",
+                append([]interface{}{msg}, args...)...)}
+}</span>
+
+func (_c *MockLogger_Error_Call) Run(run func(msg string, args ...interface{})) *MockLogger_Error_Call <span class="cov0" title="0">{
+        _c.Call.Run(func(args mock.Arguments) </span><span class="cov0" title="0">{
+                variadicArgs := make([]interface{}, len(args)-1)
+                for i, a := range args[1:] </span><span class="cov0" title="0">{
+                        if a != nil </span><span class="cov0" title="0">{
+                                variadicArgs[i] = a.(interface{})
+                        }</span>
+                }
+                <span class="cov0" title="0">run(args[0].(string), variadicArgs...)</span>
+        })
+        <span class="cov0" title="0">return _c</span>
+}
+
+func (_c *MockLogger_Error_Call) Return() *MockLogger_Error_Call <span class="cov0" title="0">{
+        _c.Call.Return()
+        return _c
+}</span>
+
+func (_c *MockLogger_Error_Call) RunAndReturn(run func(string, ...interface{})) *MockLogger_Error_Call <span class="cov0" title="0">{
+        _c.Run(run)
+        return _c
+}</span>
+
+// Info provides a mock function with given fields: msg, args
+func (_m *MockLogger) Info(msg string, args ...interface{}) <span class="cov0" title="0">{
+        var _ca []interface{}
+        _ca = append(_ca, msg)
+        _ca = append(_ca, args...)
+        _m.Called(_ca...)
+}</span>
+
+// MockLogger_Info_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Info'
+type MockLogger_Info_Call struct {
+        *mock.Call
+}
+
+// Info is a helper method to define mock.On call
+//   - msg string
+//   - args ...interface{}
+func (_e *MockLogger_Expecter) Info(msg interface{}, args ...interface{}) *MockLogger_Info_Call <span class="cov0" title="0">{
+        return &amp;MockLogger_Info_Call{Call: _e.mock.On("Info",
+                append([]interface{}{msg}, args...)...)}
+}</span>
+
+func (_c *MockLogger_Info_Call) Run(run func(msg string, args ...interface{})) *MockLogger_Info_Call <span class="cov0" title="0">{
+        _c.Call.Run(func(args mock.Arguments) </span><span class="cov0" title="0">{
+                variadicArgs := make([]interface{}, len(args)-1)
+                for i, a := range args[1:] </span><span class="cov0" title="0">{
+                        if a != nil </span><span class="cov0" title="0">{
+                                variadicArgs[i] = a.(interface{})
+                        }</span>
+                }
+                <span class="cov0" title="0">run(args[0].(string), variadicArgs...)</span>
+        })
+        <span class="cov0" title="0">return _c</span>
+}
+
+func (_c *MockLogger_Info_Call) Return() *MockLogger_Info_Call <span class="cov0" title="0">{
+        _c.Call.Return()
+        return _c
+}</span>
+
+func (_c *MockLogger_Info_Call) RunAndReturn(run func(string, ...interface{})) *MockLogger_Info_Call <span class="cov0" title="0">{
+        _c.Run(run)
+        return _c
+}</span>
+
+// Warn provides a mock function with given fields: msg, args
+func (_m *MockLogger) Warn(msg string, args ...interface{}) <span class="cov0" title="0">{
+        var _ca []interface{}
+        _ca = append(_ca, msg)
+        _ca = append(_ca, args...)
+        _m.Called(_ca...)
+}</span>
+
+// MockLogger_Warn_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Warn'
+type MockLogger_Warn_Call struct {
+        *mock.Call
+}
+
+// Warn is a helper method to define mock.On call
+//   - msg string
+//   - args ...interface{}
+func (_e *MockLogger_Expecter) Warn(msg interface{}, args ...interface{}) *MockLogger_Warn_Call <span class="cov0" title="0">{
+        return &amp;MockLogger_Warn_Call{Call: _e.mock.On("Warn",
+                append([]interface{}{msg}, args...)...)}
+}</span>
+
+func (_c *MockLogger_Warn_Call) Run(run func(msg string, args ...interface{})) *MockLogger_Warn_Call <span class="cov0" title="0">{
+        _c.Call.Run(func(args mock.Arguments) </span><span class="cov0" title="0">{
+                variadicArgs := make([]interface{}, len(args)-1)
+                for i, a := range args[1:] </span><span class="cov0" title="0">{
+                        if a != nil </span><span class="cov0" title="0">{
+                                variadicArgs[i] = a.(interface{})
+                        }</span>
+                }
+                <span class="cov0" title="0">run(args[0].(string), variadicArgs...)</span>
+        })
+        <span class="cov0" title="0">return _c</span>
+}
+
+func (_c *MockLogger_Warn_Call) Return() *MockLogger_Warn_Call <span class="cov0" title="0">{
+        _c.Call.Return()
+        return _c
+}</span>
+
+func (_c *MockLogger_Warn_Call) RunAndReturn(run func(string, ...interface{})) *MockLogger_Warn_Call <span class="cov0" title="0">{
+        _c.Run(run)
+        return _c
+}</span>
+
+// NewMockLogger creates a new instance of MockLogger. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewMockLogger(t interface {
+        mock.TestingT
+        Cleanup(func())
+}) *MockLogger <span class="cov0" title="0">{
+        mock := &amp;MockLogger{}
+        mock.Mock.Test(t)
+
+        t.Cleanup(func() </span><span class="cov0" title="0">{ mock.AssertExpectations(t) }</span>)
+
+        <span class="cov0" title="0">return mock</span>
+}
+</pre>
+		
+		<pre class="file" id="file15" style="display: none">package providers
+
+import (
+        "github.com/gerps2/desafio-cloud-run/shared/config"
+        viacep "github.com/gerps2/desafio-cloud-run/shared/repositories/external_apis/viapcep"
+        "github.com/gerps2/desafio-cloud-run/shared/repositories/external_apis/weather"
+)
+
+func ProvideViaCepClient(cfg *config.Config) *viacep.ViaCepClient <span class="cov0" title="0">{
+        return viacep.NewClient(cfg.ExternalAPIs.ViaCep.BaseURL)
+}</span>
+
+func ProvideViaCepRepository(client *viacep.ViaCepClient) viacep.ViaCepRepositoryInterface <span class="cov0" title="0">{
+        return viacep.NewViaCepRepository(client)
+}</span>
+
+func ProvideWeatherClient(cfg *config.Config) *weather.WeatherClient <span class="cov0" title="0">{
+        return weather.NewClient(cfg.ExternalAPIs.Weather.BaseURL, cfg.ExternalAPIs.Weather.APIKey)
+}</span>
+
+func ProvideWeatherRepository(client *weather.WeatherClient) weather.WeatherRepositoryInterface <span class="cov0" title="0">{
+        return weather.NewWeatherRepository(client)
+}</span>
+</pre>
+		
+		<pre class="file" id="file16" style="display: none">// Code generated by mockery v2.53.4. DO NOT EDIT.
+
+package mocks
+
+import (
+        context "context"
+
+        valueObjects "github.com/gerps2/desafio-cloud-run/shared/domain/valueObjects"
+        mock "github.com/stretchr/testify/mock"
+
+        viacep "github.com/gerps2/desafio-cloud-run/shared/repositories/external_apis/viapcep"
+)
+
+// MockViaCepRepositoryInterface is an autogenerated mock type for the ViaCepRepositoryInterface type
+type MockViaCepRepositoryInterface struct {
+        mock.Mock
+}
+
+type MockViaCepRepositoryInterface_Expecter struct {
+        mock *mock.Mock
+}
+
+func (_m *MockViaCepRepositoryInterface) EXPECT() *MockViaCepRepositoryInterface_Expecter <span class="cov0" title="0">{
+        return &amp;MockViaCepRepositoryInterface_Expecter{mock: &amp;_m.Mock}
+}</span>
+
+// GetAddress provides a mock function with given fields: ctx, cep
+func (_m *MockViaCepRepositoryInterface) GetAddress(ctx context.Context, cep valueObjects.Cep) (*viacep.ViaCepResponse, error) <span class="cov0" title="0">{
+        ret := _m.Called(ctx, cep)
+
+        if len(ret) == 0 </span><span class="cov0" title="0">{
+                panic("no return value specified for GetAddress")</span>
+        }
+
+        <span class="cov0" title="0">var r0 *viacep.ViaCepResponse
+        var r1 error
+        if rf, ok := ret.Get(0).(func(context.Context, valueObjects.Cep) (*viacep.ViaCepResponse, error)); ok </span><span class="cov0" title="0">{
+                return rf(ctx, cep)
+        }</span>
+        <span class="cov0" title="0">if rf, ok := ret.Get(0).(func(context.Context, valueObjects.Cep) *viacep.ViaCepResponse); ok </span><span class="cov0" title="0">{
+                r0 = rf(ctx, cep)
+        }</span> else<span class="cov0" title="0"> {
+                if ret.Get(0) != nil </span><span class="cov0" title="0">{
+                        r0 = ret.Get(0).(*viacep.ViaCepResponse)
+                }</span>
+        }
+
+        <span class="cov0" title="0">if rf, ok := ret.Get(1).(func(context.Context, valueObjects.Cep) error); ok </span><span class="cov0" title="0">{
+                r1 = rf(ctx, cep)
+        }</span> else<span class="cov0" title="0"> {
+                r1 = ret.Error(1)
+        }</span>
+
+        <span class="cov0" title="0">return r0, r1</span>
+}
+
+// MockViaCepRepositoryInterface_GetAddress_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetAddress'
+type MockViaCepRepositoryInterface_GetAddress_Call struct {
+        *mock.Call
+}
+
+// GetAddress is a helper method to define mock.On call
+//   - ctx context.Context
+//   - cep valueObjects.Cep
+func (_e *MockViaCepRepositoryInterface_Expecter) GetAddress(ctx interface{}, cep interface{}) *MockViaCepRepositoryInterface_GetAddress_Call <span class="cov0" title="0">{
+        return &amp;MockViaCepRepositoryInterface_GetAddress_Call{Call: _e.mock.On("GetAddress", ctx, cep)}
+}</span>
+
+func (_c *MockViaCepRepositoryInterface_GetAddress_Call) Run(run func(ctx context.Context, cep valueObjects.Cep)) *MockViaCepRepositoryInterface_GetAddress_Call <span class="cov0" title="0">{
+        _c.Call.Run(func(args mock.Arguments) </span><span class="cov0" title="0">{
+                run(args[0].(context.Context), args[1].(valueObjects.Cep))
+        }</span>)
+        <span class="cov0" title="0">return _c</span>
+}
+
+func (_c *MockViaCepRepositoryInterface_GetAddress_Call) Return(_a0 *viacep.ViaCepResponse, _a1 error) *MockViaCepRepositoryInterface_GetAddress_Call <span class="cov0" title="0">{
+        _c.Call.Return(_a0, _a1)
+        return _c
+}</span>
+
+func (_c *MockViaCepRepositoryInterface_GetAddress_Call) RunAndReturn(run func(context.Context, valueObjects.Cep) (*viacep.ViaCepResponse, error)) *MockViaCepRepositoryInterface_GetAddress_Call <span class="cov0" title="0">{
+        _c.Call.Return(run)
+        return _c
+}</span>
+
+// NewMockViaCepRepositoryInterface creates a new instance of MockViaCepRepositoryInterface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewMockViaCepRepositoryInterface(t interface {
+        mock.TestingT
+        Cleanup(func())
+}) *MockViaCepRepositoryInterface <span class="cov0" title="0">{
+        mock := &amp;MockViaCepRepositoryInterface{}
+        mock.Mock.Test(t)
+
+        t.Cleanup(func() </span><span class="cov0" title="0">{ mock.AssertExpectations(t) }</span>)
+
+        <span class="cov0" title="0">return mock</span>
+}
+</pre>
+		
+		<pre class="file" id="file17" style="display: none">package viacep
+
+import (
+        "context"
+        "encoding/json"
+        "errors"
+        "fmt"
+        "net/http"
+
+        "github.com/gerps2/desafio-cloud-run/shared/domain/valueObjects"
+)
+
+type ViaCepClient struct {
+        BaseURL string
+}
+
+func NewClient(baseURL string) *ViaCepClient <span class="cov0" title="0">{
+        return &amp;ViaCepClient{
+                BaseURL: baseURL,
+        }
+}</span>
+
+func (c *ViaCepClient) GetAddress(ctx context.Context, cep valueObjects.Cep) (*ViaCepResponse, error) <span class="cov0" title="0">{
+        req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s%s/json/", c.BaseURL, cep.String()), nil)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">client := &amp;http.Client{}
+        resp, err := client.Do(req)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">defer resp.Body.Close()
+
+        if resp.StatusCode != 200 </span><span class="cov0" title="0">{
+                return nil, errors.New("failed to fetch address")
+        }</span>
+
+        <span class="cov0" title="0">var address ViaCepResponse
+        err = json.NewDecoder(resp.Body).Decode(&amp;address)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return &amp;address, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file18" style="display: none">package viacep
+
+import (
+        "context"
+
+        "github.com/gerps2/desafio-cloud-run/shared/domain/valueObjects"
+)
+
+type ViaCepRepository struct {
+        client *ViaCepClient
+}
+
+func NewViaCepRepository(client *ViaCepClient) ViaCepRepositoryInterface <span class="cov0" title="0">{
+        return &amp;ViaCepRepository{
+                client: client,
+        }
+}</span>
+
+func (r *ViaCepRepository) GetAddress(ctx context.Context, cep valueObjects.Cep) (*ViaCepResponse, error) <span class="cov0" title="0">{
+        return r.client.GetAddress(ctx, cep)
+}</span>
+</pre>
+		
+		<pre class="file" id="file19" style="display: none">// Code generated by mockery v2.53.4. DO NOT EDIT.
+
+package mocks
+
+import (
+        context "context"
+
+        weather "github.com/gerps2/desafio-cloud-run/shared/repositories/external_apis/weather"
+        mock "github.com/stretchr/testify/mock"
+)
+
+// MockWeatherRepositoryInterface is an autogenerated mock type for the WeatherRepositoryInterface type
+type MockWeatherRepositoryInterface struct {
+        mock.Mock
+}
+
+type MockWeatherRepositoryInterface_Expecter struct {
+        mock *mock.Mock
+}
+
+func (_m *MockWeatherRepositoryInterface) EXPECT() *MockWeatherRepositoryInterface_Expecter <span class="cov0" title="0">{
+        return &amp;MockWeatherRepositoryInterface_Expecter{mock: &amp;_m.Mock}
+}</span>
+
+// GetWeather provides a mock function with given fields: ctx, city
+func (_m *MockWeatherRepositoryInterface) GetWeather(ctx context.Context, city string) (*weather.WeatherResponse, error) <span class="cov0" title="0">{
+        ret := _m.Called(ctx, city)
+
+        if len(ret) == 0 </span><span class="cov0" title="0">{
+                panic("no return value specified for GetWeather")</span>
+        }
+
+        <span class="cov0" title="0">var r0 *weather.WeatherResponse
+        var r1 error
+        if rf, ok := ret.Get(0).(func(context.Context, string) (*weather.WeatherResponse, error)); ok </span><span class="cov0" title="0">{
+                return rf(ctx, city)
+        }</span>
+        <span class="cov0" title="0">if rf, ok := ret.Get(0).(func(context.Context, string) *weather.WeatherResponse); ok </span><span class="cov0" title="0">{
+                r0 = rf(ctx, city)
+        }</span> else<span class="cov0" title="0"> {
+                if ret.Get(0) != nil </span><span class="cov0" title="0">{
+                        r0 = ret.Get(0).(*weather.WeatherResponse)
+                }</span>
+        }
+
+        <span class="cov0" title="0">if rf, ok := ret.Get(1).(func(context.Context, string) error); ok </span><span class="cov0" title="0">{
+                r1 = rf(ctx, city)
+        }</span> else<span class="cov0" title="0"> {
+                r1 = ret.Error(1)
+        }</span>
+
+        <span class="cov0" title="0">return r0, r1</span>
+}
+
+// MockWeatherRepositoryInterface_GetWeather_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetWeather'
+type MockWeatherRepositoryInterface_GetWeather_Call struct {
+        *mock.Call
+}
+
+// GetWeather is a helper method to define mock.On call
+//   - ctx context.Context
+//   - city string
+func (_e *MockWeatherRepositoryInterface_Expecter) GetWeather(ctx interface{}, city interface{}) *MockWeatherRepositoryInterface_GetWeather_Call <span class="cov0" title="0">{
+        return &amp;MockWeatherRepositoryInterface_GetWeather_Call{Call: _e.mock.On("GetWeather", ctx, city)}
+}</span>
+
+func (_c *MockWeatherRepositoryInterface_GetWeather_Call) Run(run func(ctx context.Context, city string)) *MockWeatherRepositoryInterface_GetWeather_Call <span class="cov0" title="0">{
+        _c.Call.Run(func(args mock.Arguments) </span><span class="cov0" title="0">{
+                run(args[0].(context.Context), args[1].(string))
+        }</span>)
+        <span class="cov0" title="0">return _c</span>
+}
+
+func (_c *MockWeatherRepositoryInterface_GetWeather_Call) Return(_a0 *weather.WeatherResponse, _a1 error) *MockWeatherRepositoryInterface_GetWeather_Call <span class="cov0" title="0">{
+        _c.Call.Return(_a0, _a1)
+        return _c
+}</span>
+
+func (_c *MockWeatherRepositoryInterface_GetWeather_Call) RunAndReturn(run func(context.Context, string) (*weather.WeatherResponse, error)) *MockWeatherRepositoryInterface_GetWeather_Call <span class="cov0" title="0">{
+        _c.Call.Return(run)
+        return _c
+}</span>
+
+// NewMockWeatherRepositoryInterface creates a new instance of MockWeatherRepositoryInterface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// The first argument is typically a *testing.T value.
+func NewMockWeatherRepositoryInterface(t interface {
+        mock.TestingT
+        Cleanup(func())
+}) *MockWeatherRepositoryInterface <span class="cov0" title="0">{
+        mock := &amp;MockWeatherRepositoryInterface{}
+        mock.Mock.Test(t)
+
+        t.Cleanup(func() </span><span class="cov0" title="0">{ mock.AssertExpectations(t) }</span>)
+
+        <span class="cov0" title="0">return mock</span>
+}
+</pre>
+		
+		<pre class="file" id="file20" style="display: none">package weather
+
+import (
+        "context"
+        "encoding/json"
+        "errors"
+        "fmt"
+        "net/http"
+)
+
+type WeatherClient struct {
+        BaseURL string
+        APIKey  string
+}
+
+func NewClient(baseURL string, apiKey string) *WeatherClient <span class="cov0" title="0">{
+        return &amp;WeatherClient{
+                BaseURL: baseURL,
+                APIKey:  apiKey,
+        }
+}</span>
+
+func (c *WeatherClient) GetWeather(ctx context.Context, city string) (*WeatherResponse, error) <span class="cov0" title="0">{
+        req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s%s&amp;q=%s", c.BaseURL, c.APIKey, city), nil)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">client := &amp;http.Client{}
+        resp, err := client.Do(req)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">defer resp.Body.Close()
+
+        if resp.StatusCode != 200 </span><span class="cov0" title="0">{
+                return nil, errors.New("failed to fetch weather data")
+        }</span>
+
+        <span class="cov0" title="0">var weather WeatherResponse
+        err = json.NewDecoder(resp.Body).Decode(&amp;weather)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return &amp;weather, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file21" style="display: none">package weather
+
+import (
+        "context"
+)
+
+type WeatherRepository struct {
+        client *WeatherClient
+}
+
+func NewWeatherRepository(client *WeatherClient) WeatherRepositoryInterface <span class="cov0" title="0">{
+        return &amp;WeatherRepository{
+                client: client,
+        }
+}</span>
+
+func (r *WeatherRepository) GetWeather(ctx context.Context, city string) (*WeatherResponse, error) <span class="cov0" title="0">{
+        return r.client.GetWeather(ctx, city)
+}</span>
+</pre>
+		
+		<pre class="file" id="file22" style="display: none">package test
+
+import (
+        "os"
+        "testing"
+)
+
+// SetupTestEnvironment configura variáveis de ambiente para testes
+func SetupTestEnvironment(t *testing.T) <span class="cov0" title="0">{
+        t.Helper()
+        
+        // Configurações básicas para testes
+        os.Setenv("PORT", "8080")
+        os.Setenv("HOST", "localhost")
+        os.Setenv("VIACEP_BASE_URL", "https://viacep.com.br/ws")
+        os.Setenv("WEATHER_BASE_URL", "http://api.weatherapi.com/v1")
+        os.Setenv("WEATHER_API_KEY", "test-api-key")
+        os.Setenv("REQUEST_TIMEOUT_SEC", "30")
+}</span>
+
+// CleanupTestEnvironment limpa variáveis de ambiente após testes
+func CleanupTestEnvironment(t *testing.T) <span class="cov0" title="0">{
+        t.Helper()
+        
+        envVars := []string{
+                "PORT",
+                "HOST", 
+                "VIACEP_BASE_URL",
+                "WEATHER_BASE_URL",
+                "WEATHER_API_KEY",
+                "REQUEST_TIMEOUT_SEC",
+        }
+        
+        for _, env := range envVars </span><span class="cov0" title="0">{
+                os.Unsetenv(env)
+        }</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
