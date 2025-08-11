@@ -464,3 +464,7 @@ Para desenvolvimento, o servidor roda em modo debug. Para produção, configure:
 ```bash
 export GIN_MODE=release
 ```
+
+## LINK da API
+https://desafio-cloud-run-308065563700.us-central1.run.app
+
