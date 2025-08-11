@@ -2,10 +2,12 @@ package weather
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
+	"os"
 )
 
 type WeatherClient struct {
@@ -26,7 +28,14 @@ func (c *WeatherClient) GetWeather(ctx context.Context, city string) (*WeatherRe
 		return nil, err
 	}
 
-	client := &http.Client{}
+	// Configure HTTP client with TLS settings for Cloud Run
+	client := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: os.Getenv("ENV") == "production",
+			},
+		},
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err

@@ -2,10 +2,12 @@ package viacep
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/gerps2/desafio-cloud-run/shared/domain/valueObjects"
 )
@@ -26,7 +28,13 @@ func (c *ViaCepClient) GetAddress(ctx context.Context, cep valueObjects.Cep) (*V
 		return nil, err
 	}
 
-	client := &http.Client{}
+	client := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: os.Getenv("ENV") == "production",
+			},
+		},
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err

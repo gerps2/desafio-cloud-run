@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"os"
 
 	"github.com/spf13/viper"
 )
@@ -37,11 +38,10 @@ type WeatherConfig struct {
 }
 
 func Load() *Config {
-	viper.SetConfigFile(".env")
-	viper.SetConfigType("env")
+	// Enable automatic environment variable reading
 	viper.AutomaticEnv()
 
-	// Set defaults
+	// Set default values
 	viper.SetDefault("PORT", "8080")
 	viper.SetDefault("HOST", "localhost")
 	viper.SetDefault("ENV", "development")
@@ -50,8 +50,18 @@ func Load() *Config {
 	viper.SetDefault("WEATHER_BASE_URL", "http://api.weatherapi.com/v1/current.json?key=")
 	viper.SetDefault("WEATHER_API_KEY", "")
 
-	if err := viper.ReadInConfig(); err != nil {
-		log.Printf("Warning: Could not read config file: %v", err)
+	// Try to load .env file if it exists
+	if _, err := os.Stat(".env"); err == nil {
+		viper.SetConfigFile(".env")
+		viper.SetConfigType("env")
+		
+		if err := viper.ReadInConfig(); err != nil {
+			log.Printf("Warning: Found .env file but could not read it: %v", err)
+		} else {
+			log.Println("Configuration loaded from .env file")
+		}
+	} else {
+		log.Println("No .env file found, using environment variables and defaults")
 	}
 
 	var config Config

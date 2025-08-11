@@ -19,7 +19,6 @@ type Server struct {
 	logger logger.Logger
 }
 
-// TimeoutMiddleware cria um middleware que adiciona timeout às requisições
 func TimeoutMiddleware(timeout time.Duration) gin.HandlerFunc {
 	return gin.HandlerFunc(func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(c.Request.Context(), timeout)
@@ -28,7 +27,6 @@ func TimeoutMiddleware(timeout time.Duration) gin.HandlerFunc {
 		c.Request = c.Request.WithContext(ctx)
 		c.Next()
 
-		// Verificar se houve timeout
 		if ctx.Err() == context.DeadlineExceeded {
 			RespondWithTimeout(c, "", []string{"Request exceeded the configured timeout"})
 			c.Abort()
@@ -36,15 +34,12 @@ func TimeoutMiddleware(timeout time.Duration) gin.HandlerFunc {
 	})
 }
 
-// ErrorHandlerMiddleware cria um middleware que captura panics e erros não tratados
 func ErrorHandlerMiddleware(logger logger.Logger) gin.HandlerFunc {
 	return gin.HandlerFunc(func(c *gin.Context) {
 		defer func() {
 			if err := recover(); err != nil {
-				// Log do panic para debugging
 				logger.Error("Panic recovered: %v", err)
 				
-				// Verificar se a resposta já foi enviada
 				if !c.Writer.Written() {
 					causes := []string{"An unexpected error occurred in the application"}
 					RespondWithInternalError(c, "Internal server error", causes)
@@ -56,9 +51,7 @@ func ErrorHandlerMiddleware(logger logger.Logger) gin.HandlerFunc {
 		
 		c.Next()
 		
-		// Verificar se houve algum erro durante o processamento
 		if len(c.Errors) > 0 {
-			// Se ainda não foi enviada uma resposta
 			if !c.Writer.Written() {
 				lastError := c.Errors.Last()
 				logger.Error("Request error: %v", lastError.Error())
@@ -78,10 +71,8 @@ func NewServer(cfg *config.Config, log logger.Logger) *Server {
 	router := gin.New()
 	router.Use(gin.Logger())
 	
-	// Aplicar middleware de tratamento de erros global (substitui gin.Recovery())
 	router.Use(ErrorHandlerMiddleware(log))
 	
-	// Aplicar middleware de timeout global
 	timeout := time.Duration(cfg.App.RequestTimeoutSec) * time.Second
 	router.Use(TimeoutMiddleware(timeout))
 
@@ -97,7 +88,7 @@ func (s *Server) GetRouter() *gin.Engine {
 }
 
 func (s *Server) Start() error {
-	addr := fmt.Sprintf("%s:%s", s.config.Server.Host, s.config.Server.Port)
+	addr := fmt.Sprintf(":%s", s.config.Server.Port)
 	
 	s.server = &http.Server{
 		Addr:         addr,

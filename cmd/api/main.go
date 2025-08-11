@@ -37,19 +37,16 @@ func NewApp(
 func (a *App) setupRoutes() {
 	router := a.server.GetRouter()
 
-	// Health check route
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "healthy"})
 	})
 
-	// Register weather routes
 	a.weatherController.RegisterRoutes(router)
 }
 
 func (a *App) Run() error {
 	a.setupRoutes()
 
-	// Start server in a goroutine
 	go func() {
 		if err := a.server.Start(); err != nil {
 			a.logger.Error("Server failed to start: %v", err)

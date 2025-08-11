@@ -1,0 +1,7 @@
+### Health Check
+GET https://desafio-cloud-run-308065563700.us-central1.run.app/health
+Content-Type: application/json
+
+### Weather
+GET https://desafio-cloud-run-308065563700.us-central1.run.app/api/v1/weather/18077-346
+Content-Type: application/json

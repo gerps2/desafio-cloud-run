@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # Main application service
+  # Weather API service
   weather-api:
     build:
       context: .
@@ -16,45 +16,4 @@ services:
       - WEATHER_BASE_URL=http://api.weatherapi.com/v1/current.json?key=
       - WEATHER_API_KEY=${WEATHER_API_KEY:-your-weather-api-key}
       - REQUEST_TIMEOUT_SEC=300
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
     restart: unless-stopped
-    networks:
-      - weather-network
-
-  # Development service with hot reload (optional)
-  weather-api-dev:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    container_name: weather-api-dev
-    ports:
-      - "8081:8080"
-    environment:
-      - PORT=8080
-      - HOST=0.0.0.0
-      - VIACEP_BASE_URL=https://viacep.com.br/ws/
-      - WEATHER_BASE_URL=http://api.weatherapi.com/v1/current.json?key=
-      - WEATHER_API_KEY=${WEATHER_API_KEY:-your-weather-api-key}
-      - REQUEST_TIMEOUT_SEC=300
-    volumes:
-      - .:/app
-      - /app/bin
-    working_dir: /app
-    command: go run ./cmd/api
-    networks:
-      - weather-network
-    profiles:
-      - dev
-
-networks:
-  weather-network:
-    driver: bridge
-
-volumes:
-  go-modules:
-    driver: local
