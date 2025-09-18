@@ -2,6 +2,177 @@
 
 API REST desenvolvida em Go seguindo **Clean Architecture** + **DDD** com **Vertical Slice Architecture**. A aplicação consulta o clima de uma cidade através do CEP, integrando-se com as APIs ViaCep e WeatherAPI.
 
+## 🚀 Como Executar
+
+> **⚡ Quer testar rapidamente?** Use Docker Compose (mais fácil):
+> ```bash
+> git clone <repository-url>
+> cd desafio-cloud-run
+> echo "WEATHER_API_KEY=sua-chave-aqui" > .env
+> docker-compose up --build
+> ```
+
+> **🌐 API já está rodando no Cloud Run:** https://desafio-cloud-run-308065563700.us-central1.run.app
+
+### Pré-requisitos
+
+#### Obrigatórios
+- **Go 1.22+**: [Download aqui](https://golang.org/dl/)
+- **WeatherAPI Key**: Conta gratuita em [WeatherAPI](https://www.weatherapi.com/) (1000 chamadas/dia)
+
+#### Opcionais (para desenvolvimento)
+- **Google Wire CLI**: `go install github.com/google/wire/cmd/wire@latest`
+- **Mockery**: `go install github.com/vektra/mockery/v2@latest`
+- **Docker**: Para execução containerizada
+- **Docker Compose**: Para orquestração de containers
+
+### 🚀 Execução Rápida (Docker Compose)
+
+1. **Clone o repositório**
+```bash
+git clone <repository-url>
+cd desafio-cloud-run
+```
+
+2. **Configure a Weather API Key**
+```bash
+# Crie um arquivo .env com sua chave da WeatherAPI
+echo "WEATHER_API_KEY=sua-chave-weather-api-aqui" > .env
+```
+
+3. **Execute com Docker Compose**
+```bash
+# Build e execução
+docker-compose up --build
+
+# Ou em background
+docker-compose up -d --build
+```
+
+4. **Acesse a aplicação**
+```bash
+# API disponível em
+curl "http://localhost:8080/api/v1/weather/01310-100"
+
+# Health check
+curl "http://localhost:8080/health"
+```
+
+### 🖥️ Execução Local (Desenvolvimento)
+
+1. **Clone o repositório**
+```bash
+git clone <repository-url>
+cd desafio-cloud-run
+```
+
+2. **Instale as dependências**
+```bash
+go mod tidy
+```
+
+3. **Configure as variáveis de ambiente**
+```bash
+# Crie o arquivo .env baseado no exemplo
+cp .env.example .env
+# Edite o .env com sua Weather API Key
+```
+
+4. **Gere o código Wire e mocks** (opcional)
+```bash
+make wire
+make mocks
+```
+
+5. **Execute a aplicação**
+```bash
+make run
+# ou
+go run ./cmd/api
+```
+
+A aplicação estará disponível em `http://localhost:8080`
+
+### 🐳 Outras Formas de Execução
+
+#### Docker (Standalone)
+```bash
+# Build da imagem
+docker build -t weather-api:latest .
+
+# Execute o container
+docker run -p 8080:8080 \
+  -e WEATHER_API_KEY=sua-chave-aqui \
+  -e PORT=8080 \
+  -e HOST=0.0.0.0 \
+  weather-api:latest
+```
+
+#### Comandos do Makefile
+```bash
+# Executar aplicação
+make run
+
+# Executar todos os testes
+make test
+
+# Gerar mocks
+make mocks
+
+# Gerar código Wire
+make wire
+
+# Build da aplicação
+make build
+
+# Limpar arquivos gerados
+make clean
+```
+
+## 📋 Configuração
+
+### Arquivo de Configuração (.env)
+
+Crie um arquivo `.env` na raiz do projeto com as seguintes configurações:
+
+```env
+# ===========================================
+# CONFIGURAÇÃO DO SERVIDOR
+# ===========================================
+PORT=8080
+HOST=localhost
+ENV=development
+
+# ===========================================
+# APIs EXTERNAS
+# ===========================================
+# ViaCep API (endereço por CEP)
+VIACEP_BASE_URL=https://viacep.com.br/ws/
+
+# WeatherAPI (clima por cidade)
+WEATHER_BASE_URL=http://api.weatherapi.com/v1/current.json?key=
+WEATHER_API_KEY=sua-chave-weather-api-aqui
+
+# ===========================================
+# CONFIGURAÇÕES DA APLICAÇÃO
+# ===========================================
+# Timeout das requisições em segundos (padrão: 300 = 5 minutos)
+REQUEST_TIMEOUT_SEC=300
+```
+
+#### Como obter a Weather API Key
+
+1. Acesse [WeatherAPI](https://www.weatherapi.com/)
+2. Crie uma conta gratuita
+3. Vá para "My Account" → "API Keys"
+4. Copie sua API Key
+5. Adicione ao arquivo `.env`:
+```bash
+WEATHER_API_KEY=sua-chave-real-aqui
+```
+
+> **Nota**: A conta gratuita permite 1000 chamadas por dia, o que é suficiente para desenvolvimento e testes.
+
 ## 🏗️ Arquitetura da Aplicação
 
 ### Visão Geral
@@ -85,7 +256,7 @@ desafio-cloud-run/
 
 ### Como Funciona uma Requisição
 
-1. **📥 Entrada HTTP**: Cliente faz requisição `GET /api/v1/weather/getWeatherByCep?cep=01310-100`
+1. **📥 Entrada HTTP**: Cliente faz requisição `GET /api/v1/weather/01310-100`
 
 2. **🎛️ Controller**: Recebe a requisição, extrai o parâmetro CEP e chama o Use Case
 
@@ -116,7 +287,7 @@ Cliente → Controller → Use Case → ViaCep Repo → ViaCep API
 
 ### Stack Tecnológica
 
-- **Go 1.21+**: Linguagem principal
+- **Go 1.22+**: Linguagem principal
 - **Gin**: Framework HTTP
 - **Google Wire**: Injeção de dependência
 - **Viper**: Gerenciamento de configuração
@@ -139,99 +310,45 @@ Cliente → Controller → Use Case → ViaCep Repo → ViaCep API
 - **CORS**: Configurado para desenvolvimento
 - **Logging**: Log estruturado de todas as requisições
 
-## 📋 Configuração
-
-### Variáveis de Ambiente (.env)
-
-```env
-# Servidor HTTP
-PORT=8080
-HOST=localhost
-
-# APIs Externas
-VIACEP_BASE_URL=https://viacep.com.br/ws/
-WEATHER_BASE_URL=http://api.weatherapi.com/v1/current.json?key=
-WEATHER_API_KEY=your-weather-api-key
-
-# Configurações
-REQUEST_TIMEOUT_SEC=300
-```
-
-## 🚀 Como Executar
-
-### Pré-requisitos
-
-- Go 1.21+
-- Google Wire CLI: `go install github.com/google/wire/cmd/wire@latest`
-- Mockery: `go install github.com/vektra/mockery/v2@latest`
-- Conta no WeatherAPI para obter API key
-
-### Comandos Disponíveis
-
-```bash
-# Executar aplicação
-make run
-
-# Executar todos os testes
-make test
-
-# Executar testes E2E
-make test-e2e
-
-# Gerar mocks
-make mocks
-
-# Gerar código Wire
-make wire
-```
-
-### Instalação e Execução
-
-1. **Clone o repositório**
-```bash
-git clone <repository-url>
-cd desafio-cloud-run
-```
-
-2. **Instale as dependências**
-```bash
-go mod tidy
-```
-
-3. **Configure as variáveis de ambiente**
-```bash
-cp .env.example .env
-# Edite o .env com suas configurações
-```
-
-4. **Gere o código Wire e mocks**
-```bash
-make wire
-make mocks
-```
-
-5. **Execute a aplicação**
-```bash
-make run
-```
-
-A aplicação estará disponível em `http://localhost:8080`
-
 ## 📡 API Endpoints
+
+### 🧪 Arquivos de Teste da API
+
+O projeto inclui arquivos prontos para testar a API:
+
+- **`api-dev.http`** - Para testar a API em produção (Cloud Run)
+- **`api.http`** - Para testar a API localmente (desenvolvimento)
+
+> **💡 Como usar:** Abra estes arquivos no VS Code com a extensão "REST Client" e clique em "Send Request" acima de cada requisição!
+
+#### Exemplo de uso:
+
+1. **Abra o arquivo** `api-dev.http` no VS Code
+2. **Instale a extensão** REST Client (se não tiver)
+3. **Clique em "Send Request"** acima de cada endpoint
+4. **Veja as respostas** diretamente no editor!
+
+```http
+### Health Check (Produção)
+GET https://desafio-cloud-run-308065563700.us-central1.run.app/health
+
+### Weather API (Produção)
+GET https://desafio-cloud-run-308065563700.us-central1.run.app/api/v1/weather/01310-100
+```
 
 ### Weather API
 
 #### Consultar Clima por CEP
 ```http
-GET /api/v1/weather/getWeatherByCep?cep={cep}
+GET /api/v1/weather/{cep}
 ```
 
 **Parâmetros:**
-- `cep` (string): CEP no formato `00000-000` ou `00000000`
+- `cep` (path parameter): CEP no formato `00000-000` ou `00000000`
 
 **Exemplo de Requisição:**
 ```bash
-curl "http://localhost:8080/api/v1/weather/getWeatherByCep?cep=01310-100"
+curl "http://localhost:8080/api/v1/weather/01310-100"
 ```
 
 **Resposta de Sucesso (200):**
@@ -296,23 +413,89 @@ A aplicação possui uma cobertura de testes robusta com **80%+ de cobertura**:
 
 ### Executar Testes
 
+#### Todos os Testes
 ```bash
-# Todos os testes
+# Via Makefile (recomendado)
 make test
 
-# Testes com cobertura
+# Ou diretamente com Go
+go test -v ./...
+```
+
+#### Testes com Cobertura
+```bash
+# Gerar relatório de cobertura
 go test -coverprofile=coverage.out ./...
+
+# Visualizar cobertura no terminal
+go tool cover -func=coverage.out
+
+# Gerar relatório HTML
 go tool cover -html=coverage.out -o coverage.html
 
-# Regenerar mocks
-make mocks
+# Abrir relatório no navegador
+open coverage.html
 ```
+
+#### Testes Específicos
+```bash
+# Apenas testes unitários
+go test ./features/weather/getWeatherByCep/...
+
+# Apenas testes de controllers
+go test ./features/weather/...
+
+# Testes com verbose e cobertura
+go test -v -cover ./...
+```
+
+#### Gerenciamento de Mocks
+```bash
+# Regenerar todos os mocks
+make mocks
+
+# Ou manualmente
+mockery --all
+
+# Verificar se mocks estão atualizados
+git status
+```
+
+### Estrutura de Testes
+
+A aplicação possui cobertura de testes abrangente:
+
+- **✅ Unitários**: Use Cases, Value Objects, Repositories
+- **✅ Integração**: Controllers, HTTP endpoints
+- **✅ Mocks**: Gerados automaticamente com Mockery
+- **✅ Helpers**: Utilitários para configuração de testes
 
 ### Cobertura Atual
 
-- **Use Cases**: 87.5% de cobertura
-- **Controllers**: 75.0% de cobertura  
-- **Value Objects**: 100% de cobertura
+| Componente | Cobertura | Status |
+|------------|-----------|--------|
+| **Use Cases** | ~85% | ✅ Bom |
+| **Controllers** | ~75% | ✅ Adequado |
+| **Value Objects** | 100% | ✅ Completo |
+| **Repositories** | ~80% | ✅ Bom |
+
+### Testes E2E
+
+Para testes end-to-end (se implementados):
+
+```bash
+# Executar aplicação em background
+make run &
+
+# Aguardar inicialização
+sleep 5
+
+# Executar testes E2E
+go test ./test/e2e/...
+
+# Parar aplicação
+pkill -f "go run"
+```
 
 ## 🏗️ Desenvolvimento
 
@@ -357,7 +540,7 @@ make wire
 ### Docker (Futuro)
 
 ```dockerfile
-FROM golang:1.21-alpine AS builder
+FROM golang:1.22-alpine AS builder
 WORKDIR /app
 COPY . .
 RUN go mod download
@@ -388,83 +571,13 @@ gcloud run deploy --image gcr.io/PROJECT-ID/weather-api --platform managed
 
 ---
 
-**Desenvolvido com ❤️ usando Go e Clean Architecture**
-```
+## 🔗 Links Úteis
 
-O servidor estará disponível em `http://localhost:8080`
+- **API Produção**: https://desafio-cloud-run-308065563700.us-central1.run.app
+- **Documentação WeatherAPI**: https://www.weatherapi.com/docs/
+- **Documentação ViaCep**: https://viacep.com.br/
 
-## 📡 Endpoints
+---
 
-### Health Check
-```
-GET /health
-```
-Resposta:
-```json
-{"status":"healthy"}
-```
-
-### Ping
-```
-GET /api/v1/ping
-```
-Resposta:
-```json
-{"message":"pong","status":"success"}
-```
-
-## ⚙️ Configuração
-
-As configurações são gerenciadas através do arquivo `.env`:
-
-```env
-PORT=8080
-HOST=localhost
-ENV=development
-```
-
-## 🛠️ Tecnologias Utilizadas
-
-- **[Gin](https://github.com/gin-gonic/gin)**: Framework web HTTP
-- **[Viper](https://github.com/spf13/viper)**: Gerenciamento de configuração
-- **[Wire](https://github.com/google/wire)**: Injeção de dependência
-- **Go 1.21**: Linguagem de programação
-
-## 📁 Adicionando Novas Features
-
-Para adicionar uma nova feature seguindo o padrão vertical slice:
-
-1. Crie um diretório em `features/nome-da-feature/`
-2. Implemente as camadas:
-   - `domain/`: Entidades e regras de negócio
-   - `usecase/`: Casos de uso
-   - `controller/`: Controllers HTTP
-   - `routes/`: Definição de rotas
-3. Registre as dependências no `wire.go`
-4. Registre as rotas no `main.go`
-
-## 🧪 Testes
-
-Para executar os testes:
-```bash
-go test ./...
-```
-
-## 📝 Logs
-
-O sistema de logs está configurado para diferentes níveis:
-- INFO: Informações gerais
-- ERROR: Erros
-- DEBUG: Informações de debug
-- WARN: Avisos
-
-## 🔧 Desenvolvimento
-
-Para desenvolvimento, o servidor roda em modo debug. Para produção, configure:
-```bash
-export GIN_MODE=release
-```
-
-## LINK da API
-https://desafio-cloud-run-308065563700.us-central1.run.app
+**🚀 Desenvolvido com ❤️ usando Go, Clean Architecture e melhores práticas de desenvolvimento!**
 
