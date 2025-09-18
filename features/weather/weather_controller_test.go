@@ -20,10 +20,9 @@ import (
 func setupTestRouter(controller *WeatherController) *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	router := gin.New()
-	
-	// Add the controller routes
+
 	controller.RegisterRoutes(router)
-	
+
 	return router
 }
 
@@ -43,7 +42,7 @@ func TestWeatherControllerGetWeatherByCepSuccess(t *testing.T) {
 	mockLogger.EXPECT().Info("Weather data retrieved successfully for CEP: %s", "12345-678").Once()
 
 	mockUseCase.EXPECT().Execute(
-		mock.Anything, 
+		mock.Anything,
 		getWeatherByCep.GetWeatherByCepInput{CepString: "12345-678"},
 	).Return(expectedResult, nil).Once()
 

@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 )
 
@@ -23,12 +24,14 @@ func NewClient(baseURL string, apiKey string) *WeatherClient {
 }
 
 func (c *WeatherClient) GetWeather(ctx context.Context, city string) (*WeatherResponse, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s%s&q=%s", c.BaseURL, c.APIKey, city), nil)
+	safeCity := url.QueryEscape(city)
+	fullURL := fmt.Sprintf("%s%s&q=%s", c.BaseURL, c.APIKey, safeCity)
+
+	req, err := http.NewRequestWithContext(ctx, "GET", fullURL, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	// Configure HTTP client with TLS settings for Cloud Run
 	client := &http.Client{
 		Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{

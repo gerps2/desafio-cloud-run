@@ -6,7 +6,6 @@ import (
 	sharedErrors "github.com/gerps2/desafio-cloud-run/shared/errors"
 )
 
-// Códigos de erro específicos do GetWeatherByCep
 const (
 	CodeInvalidZipcode      = "INVALID_ZIPCODE"
 	CodeZipcodeNotFound     = "ZIPCODE_NOT_FOUND"

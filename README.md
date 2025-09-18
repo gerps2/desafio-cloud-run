@@ -52,7 +52,7 @@ docker-compose up -d --build
 4. **Acesse a aplicação**
 ```bash
 # API disponível em
-curl "http://localhost:8080/api/v1/weather/01310-100"
+curl "http://localhost:8080/api/v1/weather/18077346"
 
 # Health check
 curl "http://localhost:8080/health"

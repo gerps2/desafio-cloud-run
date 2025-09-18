@@ -23,7 +23,6 @@ func NewWeatherController(getWeatherByCepUseCase getWeatherByCep.GetWeatherByCep
 	}
 }
 
-// RegisterRoutes registra as rotas do weather controller
 func (wc *WeatherController) RegisterRoutes(router *gin.Engine) {
 	api := router.Group("/api/v1")
 	{

@@ -19,8 +19,8 @@ type ServerConfig struct {
 }
 
 type AppConfig struct {
-	Env                string `mapstructure:"env"`
-	RequestTimeoutSec  int    `mapstructure:"request_timeout_sec"`
+	Env               string `mapstructure:"env"`
+	RequestTimeoutSec int    `mapstructure:"request_timeout_sec"`
 }
 
 type ExternalAPIsConfig struct {
@@ -38,23 +38,20 @@ type WeatherConfig struct {
 }
 
 func Load() *Config {
-	// Enable automatic environment variable reading
 	viper.AutomaticEnv()
 
-	// Set default values
 	viper.SetDefault("PORT", "8080")
 	viper.SetDefault("HOST", "localhost")
 	viper.SetDefault("ENV", "development")
 	viper.SetDefault("REQUEST_TIMEOUT_SEC", 300) // 5 minutos
 	viper.SetDefault("VIACEP_BASE_URL", "https://viacep.com.br/ws/")
-	viper.SetDefault("WEATHER_BASE_URL", "http://api.weatherapi.com/v1/current.json?key=")
-	viper.SetDefault("WEATHER_API_KEY", "")
+	viper.SetDefault("WEATHER_BASE_URL", "https://api.weatherapi.com/v1/current.json?key=")
+	viper.SetDefault("WEATHER_API_KEY", "aa7fa70309da4bc39cd203930251108")
 
-	// Try to load .env file if it exists
 	if _, err := os.Stat(".env"); err == nil {
 		viper.SetConfigFile(".env")
 		viper.SetConfigType("env")
-		
+
 		if err := viper.ReadInConfig(); err != nil {
 			log.Printf("Warning: Found .env file but could not read it: %v", err)
 		} else {
