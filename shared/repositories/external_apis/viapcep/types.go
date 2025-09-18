@@ -10,4 +10,5 @@ type ViaCepResponse struct {
 	IbgeCode   string `json:"ibge"`
 	GiaCode    string `json:"gia"`
 	SiafiCode  string `json:"siafi"`
+	Erro       string `json:"erro,omitempty"`
 }

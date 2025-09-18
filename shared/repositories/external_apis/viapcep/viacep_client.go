@@ -51,5 +51,9 @@ func (c *ViaCepClient) GetAddress(ctx context.Context, cep valueObjects.Cep) (*V
 		return nil, err
 	}
 
+	if address.Erro == "true" {
+		return nil, errors.New("zipcode not found")
+	}
+
 	return &address, nil
 }
